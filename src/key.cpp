@@ -9,6 +9,7 @@
 #include <crypto/hmac_sha512.h>
 #include <hash.h>
 #include <random.h>
+#include <support/cleanse.h>
 
 #include <secp256k1.h>
 #include <secp256k1_ellswift.h>
@@ -77,7 +78,7 @@ int ec_seckey_import_der(const secp256k1_context* ctx, unsigned char *out32, con
     }
     memcpy(out32 + (32 - oslen), seckey, oslen);
     if (!secp256k1_ec_seckey_verify(ctx, out32)) {
-        memset(out32, 0, 32);
+        memory_cleanse(out32, 32);
         return 0;
     }
     return 1;
